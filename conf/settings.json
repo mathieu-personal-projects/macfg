@@ -1,7 +1,5 @@
 {
-    "name": "My user settings",
-    
-    "miscellaneaous section": "miscellaneaous settings",
+    // misc
     "files.autoSave": "afterDelay",
     "extensions.ignoreRecommendations": true,
     "git.confirmSync": false,
@@ -13,47 +11,44 @@
         "*.avsc": "Raml",
         "*.sh": "Verilog"
     },
-    
-    "terminal": "Terminal settings",
+    // terminal 
     "terminal.integrated.defaultProfile.windows": "Git Bash",
     "terminal.integrated.fontFamily": "Fira Code",
     "terminal.integrated.stickyScroll.enabled": false,
-
-    "workbench": "Workbench settings",
+    // workbench
     "workbench.colorTheme": "Default Light Modern",
     "workbench.iconTheme": "material-icon-theme",
-
-    "editor": "Editor settings",
+    // editor
     "editor.fontFamily": "Consolas, 'Courrier New', monospace",
     "editor.stickyScroll.enabled": false,
     "editor.foldingImportsByDefault": true,
     "editor.inlineSuggest.enabled": false,
-
-    "copilot": "Copilot settings",
+    // copilot 
     "github.copilot.nextEditSuggestions.enabled": false,
-
-    "java": "Java settings",
+    // java
     "java.jdt.ls.java.home": "C:\\Users\\<NAME>\\jdk21",
     "[java]": {
         "editor.fontFamily": "JetBrains Mono, Consolas, 'Courrier New', monospace"
     },
     "JAVA_HOME": "C:\\Program Files\\Java\\jdk21",
     "jdk.telemetry.enabled": false,
-
-    "python": "Python settings",
+    // python
     "[python]": {
         "editor.fontFamily": "Cascadia Mono, Consolas, 'Courrier New', monospace",
         "editor.formatOnType": true,
         "editor.fontLigatures": true
     },
     "python.createEnvironment.trigger": "off",
-
-    "langagues": "Other langagues settings",
+    // other languages
     "[shellscript]": {
         "editor.fontFamily": "Cascadia Code"
     },
-    "[json]": {"editor.fontFamily": "IBM Plex Mono"},
-    "[avro]": {"editor.fontFamily": "IBM Plex Mono"},
+    "[json]": {
+        "editor.fontFamily": "IBM Plex Mono"
+    },
+    "[avro]": {
+        "editor.fontFamily": "IBM Plex Mono"
+    },
     "files.exclude": {
         "/*.class": true,
         "/pycache": true,
