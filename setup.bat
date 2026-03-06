@@ -5,5 +5,5 @@ powershell -Command "Expand-Archive -Path 'git.zip' -DestinationPath './bin/git'
 del git.zip
 
 echo [2/2] Using bash
-"./bin/git/bin/sh.exe" ./scripts/main.sh
+"./bin/git/usr/bin/sh.exe" ./scripts/main.sh
 pause
