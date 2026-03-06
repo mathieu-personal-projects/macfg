@@ -7,16 +7,26 @@ echo ██╔████╔██║███████║██║     █�
 echo ██║╚██╔╝██║██╔══██║██║     ██╔══╝  ██║   ██║
 echo ██║ ╚═╝ ██║██║  ██║╚██████╗██║     ╚██████╔╝
 echo ╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝      ╚═════╝ 
-echo desc: configure my env • version: 0.1.0
+echo desc: configure my env • version: 0.2.0
 
-:: Self-elevate if not already running as administrator
-net session >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Relancement en mode administrateur...
-    powershell -command "start-process '%~f0' -verb runas"
-    exit /b
+:: Find bash (Git Bash ships bash.exe in its usr\bin and bin directories)
+set BASH_EXE=
+for %%B in (bash.exe) do set BASH_EXE=%%~$PATH:B
+if not defined BASH_EXE (
+    if exist "%LOCALAPPDATA%\Programs\Git\bin\bash.exe" (
+        set BASH_EXE=%LOCALAPPDATA%\Programs\Git\bin\bash.exe
+    ) else if exist "%PROGRAMFILES%\Git\bin\bash.exe" (
+        set BASH_EXE=%PROGRAMFILES%\Git\bin\bash.exe
+    ) else (
+        echo.
+        echo  [ERROR] bash not found. Install Git for Windows first:
+        echo  https://git-scm.com/download/win
+        pause
+        exit /b 1
+    )
 )
 
-powershell.exe -Command "Get-ChildItem -Path '%~dp0scripts\*.ps1' | Unblock-File"
-powershell.exe -ExecutionPolicy Bypass -File "%~dp0scripts\main.ps1"
+pushd "%~dp0"
+"%BASH_EXE%" "./scripts/main.sh" %*
+popd
 pause
