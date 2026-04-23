@@ -5,12 +5,12 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import java.util.Scanner
 
-@Component
+// @Component - Disabled in favor of InstallerCli
 class ToolSelectionCli(
     private val toolSelectionService: ToolSelectionService) : CommandLineRunner {
 
     override fun run(vararg args: String) {
-        if (args.contains("--interactive")) {
+        if (args.contains("--interactive-old")) {
             startInteractiveMode()
         }
     }

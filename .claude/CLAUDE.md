@@ -39,38 +39,58 @@ The project includes a complete PKI setup for SSL/TLS:
 mvn spring-boot:run -Dspring-boot.run.profiles=ssl
 ```
 
-### Tools Configuration System
+### Tools Configuration & Interactive Installer
 
-The project includes a tools configuration system that manages software tools, versions, and selections.
+The project includes a comprehensive development environment installer with OS detection and clean installation.
 
 #### Key Features
-- Reads default versions from `tools.ini`
-- Version management (users can change tool versions)
-- Selection tracking (tools can be marked as selected)
-- Automatic download URL generation based on version
-- REST API for all operations
-- Interactive CLI for easy management
+- **OS Detection**: Auto-detects Windows/Linux/macOS and adapts download URLs
+- **No Privilege Required**: Installs to `~/dev` or `%USERPROFILE%\dev` without elevation
+- **Privilege Warnings**: Warns when tools (Docker, PostgreSQL, etc.) require admin rights
+- **Version Management**: Default versions from `tools.ini`, customizable during installation
+- **Interactive CLI**: Step-by-step guided installation process
+- **Post-Configuration**: Special handling for Git (config prompts) and VSCode (applies settings)
+- **Clean Installation**: All tools organized in dedicated dev folder
+- **REST API**: Full programmatic access to tool management
 
-#### Configuration File
-- Location: `config/src/main/resources/tools/tools.ini`
-- Format: INI with categories and version mappings
-- Documentation: `README-TOOLS.md`
+#### Configuration Files
+- **tools.ini**: `config/src/main/resources/tools/tools.ini` - Tool definitions and default versions
+- **vscode-settings.json**: `config/src/main/resources/tools/vscode-settings.json` - VSCode preferences to apply
+- Documentation: `README-INSTALLER.md`
 
-#### Running the System
+#### Running the Interactive Installer
 ```bash
-# Start config service
+# Terminal 1: Start config service
 cd config && mvn spring-boot:run
 
-# Start core service with interactive CLI
-cd core && mvn spring-boot:run -Dspring-boot.run.arguments=--interactive
+# Terminal 2: Start interactive installer
+cd core && mvn spring-boot:run
 ```
 
-#### API Endpoints
-- `GET /api/tools` - List all tools
-- `PUT /api/tools/{category}/{tool}/version` - Change version
-- `PUT /api/tools/{category}/{tool}/select/{true|false}` - Set selection
-- `GET /api/tools/selected` - Get selected tools
+The installer will:
+1. Detect your OS
+2. Show available tools by category
+3. Let you select tools to install
+4. Warn about privilege requirements
+5. Allow version customization
+6. Install to dev folder
+7. Configure Git and VSCode post-installation
+
+#### API Endpoints (Config Service - Port 7777)
+- `GET /api/tools` - List all tools with versions and download URLs
+- `GET /api/tools/{category}/{tool}` - Get specific tool
+- `PUT /api/tools/{category}/{tool}/version` - Change version (body: `{"version": "26"}`)
+- `PUT /api/tools/{category}/{tool}/select/{true|false}` - Set selection state
+- `PUT /api/tools/{category}/{tool}/select` - Toggle selection
+- `GET /api/tools/selected` - Get all selected tools
+- `DELETE /api/tools/selected` - Clear all selections
 
 Swagger UI: http://localhost:7777/swagger-ui.html
+
+#### Tools Requiring Elevation
+- docker (Hyper-V/WSL2)
+- postgresql, mysql, mongodb (system services)
+
+The installer warns before proceeding with these tools.
 
 ---
