@@ -32,3 +32,11 @@ replay_pid*
 .claude/*.local.*
 
 **/target/*
+
+# Certificates and keystores - DO NOT COMMIT
+**/certs/*.pem
+**/certs/*.jks
+**/certs/*.p12
+**/certs/*.key
+**/certs/*.crt
+**/certs/*.cer
