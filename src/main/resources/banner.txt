@@ -1,0 +1,7 @@
+---------------------------------------------------------
+[MaCfg.name] -> Ma Configuration                        _._     _,-'""`-._
+[MaCfg.description] -> Configuration settupper         (,-.`._,'(       |\`-/|
+[MaCfg.vendor] -> Mathieu Personnal Projects               `-.-' \ )-`( , o o)
+[MaCfg.vendor] -> Mathieu Personnal Projects                     `-    \`_`"'-
+[MaCfg.lang] -> Made w/ @Kotlin & @Springboot
+---------------------------------------------------------

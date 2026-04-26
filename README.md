@@ -4,19 +4,37 @@ This project is just a CLI application to setup my dev environement.
 
 Made w/ Kotlin.
 
-## Dev environement
+## More on this
 
-The project is built on 2 modules : 
-- configuration module
-- installation module 
+The project fetches the tools I use on their LTS (Long Term Service) and install them whether i'm running Windows Linux or MacOs. 
+Then in the CLI I choose what tools I want to install.
 
-### Configuration module 
+Currently, the configuration can install : 
 
-This modules gather all my tools with a default version. It has the settings for the tools (vscode, bruno...) and it can also fetch the latest version of the tools. 
+### Without privilege elevation 
+- VsCode
+- Java
+- Python
+- Rust
+- Nodejs
+- bun
+- uv
+- mvn 
+- git 
+- gitbash
+- termius
+- bruno
 
-### Core module 
-
-CLI tool that lets me choose the apps I want to install, with its version and setup everything nicely.
+### With privilege elevation
+- WSL2 
+- Docker
+- mongodb
+- postgresql
+- mysql
+- pgadmin
+- mysql-workbench
+- compass
+- make
 
 ## Contact
 

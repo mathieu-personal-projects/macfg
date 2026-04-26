@@ -7,90 +7,59 @@ Always update this file when updating the project, and always report the number 
 
 ## Project Overview
 
-This is a Spring Boot multi-module Maven project written in Kotlin (version 2.2.21) using Java 21.
+This is a Spring Shell CLI application written in Kotlin (version 2.2.21) using Java 21 and Spring Boot.
+It acts as a development environment setup tool to download and install various dev tools based on the current OS (Windows, Linux, macOS).
 
-### Modules
-- **config**: Configuration service module (Port 7777)
-  - Tools configuration and version management
-  - REST API for tool operations
-  - INI file parser for default versions
-  - Download URL generation
-- **core**: Core application module (Port 7778)
-  - Interactive CLI for tool selection
-  - Client service for config module
+### Architecture
+The project is built as a **single-module** application:
+- No longer split into multiple services or APIs.
+- Uses **Spring Shell** to provide an interactive command-line interface.
+- Core commands are located in `src/main/kotlin/com/macfg/cli/InstallCommand.kt`.
+- Tool installers are dynamically managed via `InstallerRegistry` and extend `ToolInstaller`.
 
-### Security & Certificates
+### Key Features
+- **OS Detection**: Auto-detects Windows/Linux/macOS and adapts download URLs/installation paths.
+- **No Privilege Required**: Most tools are installed locally to `~/dev` or `%USERPROFILE%\dev` without elevation.
+- **Privilege Warnings**: Explicitly warns when tools (Docker, PostgreSQL, WSL, etc.) require admin rights.
+- **Interactive CLI**: Step-by-step guided installation process (ex: via the `select` command).
 
-The project includes a complete PKI setup for SSL/TLS:
-- Self-signed CA for development
-- Server certificates with SAN (localhost, *.localhost, 127.0.0.1)
-- Client certificates for mutual TLS
-- Java keystores (JKS and PKCS12 formats)
-- Truststore for CA certificates
+### Available Commands
+Once the shell is started, the following commands are available:
+- `list`: Lists all available tools grouped by category (Dev Tools, Editors, Databases, Runtimes, etc.) along with their installation status.
+- `select`: Opens an interactive menu to choose tools to install by entering their corresponding numbers.
+- `install <tools>`: Installs one or more tools specified by name, separated by commas (e.g., `install vscode,java,node`).
+- `install-all`: Installs all tools that do not require administrative elevation.
+- `status <tool>`: Checks the specific status and version of a given tool.
 
-#### Certificate Management
-- Generation script: `generate-certs.sh` 
-- Location: `config/src/main/resources/certs/`
-- Documentation: `README-CERTIFICATES.md`
-- SSL configuration profile: `application-ssl.properties`
+### Running the Application
 
-#### Running with SSL
+You can launch the interactive shell directly with Maven wrapper:
 ```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=ssl
+./mvnw spring-boot:run
 ```
 
-### Tools Configuration & Interactive Installer
+Once loaded, type `help` to see the available commands or `list` to see available tools.
 
-The project includes a comprehensive development environment installer with OS detection and clean installation.
+### Running with Docker
 
-#### Key Features
-- **OS Detection**: Auto-detects Windows/Linux/macOS and adapts download URLs
-- **No Privilege Required**: Installs to `~/dev` or `%USERPROFILE%\dev` without elevation
-- **Privilege Warnings**: Warns when tools (Docker, PostgreSQL, etc.) require admin rights
-- **Version Management**: Default versions from `tools.ini`, customizable during installation
-- **Interactive CLI**: Step-by-step guided installation process
-- **Post-Configuration**: Special handling for Git (config prompts) and VSCode (applies settings)
-- **Clean Installation**: All tools organized in dedicated dev folder
-- **REST API**: Full programmatic access to tool management
+Since turning into a CLI tool, the project can also be built and run using Docker (although its main purpose is to configure your host machine):
 
-#### Configuration Files
-- **tools.ini**: `config/src/main/resources/tools/tools.ini` - Tool definitions and default versions
-- **vscode-settings.json**: `config/src/main/resources/tools/vscode-settings.json` - VSCode preferences to apply
-- Documentation: `README-INSTALLER.md`
-
-#### Running the Interactive Installer
+**Build the image:**
 ```bash
-# Terminal 1: Start config service
-cd config && mvn spring-boot:run
-
-# Terminal 2: Start interactive installer
-cd core && mvn spring-boot:run
+docker build -t macfg:latest .
 ```
 
-The installer will:
-1. Detect your OS
-2. Show available tools by category
-3. Let you select tools to install
-4. Warn about privilege requirements
-5. Allow version customization
-6. Install to dev folder
-7. Configure Git and VSCode post-installation
+**Run interactively:**
+```bash
+docker run -it --rm -v ${HOME}/dev:/root/dev macfg:latest
+```
 
-#### API Endpoints (Config Service - Port 7777)
-- `GET /api/tools` - List all tools with versions and download URLs
-- `GET /api/tools/{category}/{tool}` - Get specific tool
-- `PUT /api/tools/{category}/{tool}/version` - Change version (body: `{"version": "26"}`)
-- `PUT /api/tools/{category}/{tool}/select/{true|false}` - Set selection state
-- `PUT /api/tools/{category}/{tool}/select` - Toggle selection
-- `GET /api/tools/selected` - Get all selected tools
-- `DELETE /api/tools/selected` - Clear all selections
+### Tools Requiring Elevation
+Some tools interact with the base system and require the terminal to be run as Administrator/root:
+- WSL2
+- Docker
+- Databases: mongodb, postgresql, mysql
+- DB GUIs: pgadmin, mysql-workbench, compass
+- make
 
-Swagger UI: http://localhost:7777/swagger-ui.html
-
-#### Tools Requiring Elevation
-- docker (Hyper-V/WSL2)
-- postgresql, mysql, mongodb (system services)
-
-The installer warns before proceeding with these tools.
-
----
+The installer will warn before proceeding with these tools if they are requested.
